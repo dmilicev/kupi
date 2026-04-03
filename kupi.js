@@ -59,7 +59,7 @@ let items           = [];
 let selectedIndex   = null;   // stavka izabrana dugim pritiskom
 let longPressTimer  = null;
 let longPressFired  = false;
-const LONG_PRESS_MS = 600;
+const LONG_PRESS_MS = 1000;
 
 // ============================================================
 // PERSISTENCIJA
