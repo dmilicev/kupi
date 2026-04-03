@@ -1,0 +1,447 @@
+/* ============================================================
+   VARIJABLE I RESET
+   ============================================================ */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  --bg:             #f5f0e8;
+  --surface:        #fffdf7;
+  --surface2:       #f0ebe0;
+  --border:         #d8d0bc;
+  --text:           #2a2218;
+  --text-muted:     #8a7e6a;
+  --accent:         #2e7d32;
+  --accent-light:   #e8f5e9;
+  --accent-dark:    #1b5e20;
+  --edit-color:     #1565c0;
+  --edit-light:     #e3f2fd;
+  --danger:         #b71c1c;
+  --danger-light:   #ffebee;
+  --export-color:   #6a1b9a;
+  --export-light:   #f3e5f5;
+  --import-color:   #e65100;
+  --import-light:   #fff3e0;
+  --selected-color: #e65100;
+  --selected-light: #fff3e0;
+  --inactive-text:  #a09880;
+  --shadow:         0 2px 12px rgba(0,0,0,0.08);
+  --shadow-lg:      0 8px 32px rgba(0,0,0,0.14);
+  --radius:         14px;
+  --radius-sm:      10px;
+  --transition:     0.2s ease;
+}
+
+html { font-size: 20px; }   /* OSNOVA: duplo veća od uobičajenih 16px */
+
+body {
+  font-family: 'DM Sans', sans-serif;
+  background-color: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  line-height: 1.5;
+}
+
+/* ============================================================
+   PAGE WRAPPER
+   ============================================================ */
+.page-wrapper {
+  max-width: 780px;
+  margin: 0 auto;
+  padding-bottom: 100px;
+}
+
+/* ============================================================
+   HEADER
+   ============================================================ */
+.header {
+  background: var(--surface);
+  border-bottom: 2px solid var(--border);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: var(--shadow);
+}
+
+.header-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 12px 18px;
+  flex-wrap: wrap;
+}
+
+.logo {
+  font-family: 'DM Serif Display', serif;
+  font-size: 1.5rem;
+  color: var(--accent);
+  letter-spacing: -0.5px;
+  white-space: nowrap;
+}
+
+.toolbar {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+/* ============================================================
+   DUGMAD
+   ============================================================ */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 8px 14px;
+  border-radius: var(--radius-sm);
+  border: 2px solid transparent;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--transition);
+  white-space: nowrap;
+  line-height: 1;
+}
+
+.btn:disabled {
+  opacity: 0.35;
+  cursor: default;
+  pointer-events: none;
+}
+
+.btn-icon {
+  font-style: normal;
+  font-size: 0.95rem;
+  line-height: 1;
+}
+
+.btn-primary {
+  background: var(--accent);
+  color: #fff;
+  border-color: var(--accent);
+}
+.btn-primary:hover { background: var(--accent-dark); border-color: var(--accent-dark); }
+
+.btn-secondary {
+  background: var(--surface);
+  color: var(--accent);
+  border-color: var(--accent);
+}
+.btn-secondary:hover { background: var(--accent-light); }
+
+.btn-danger {
+  background: var(--surface);
+  color: var(--danger);
+  border-color: var(--danger);
+}
+.btn-danger:hover { background: var(--danger-light); }
+
+.btn-ghost {
+  background: transparent;
+  color: var(--text-muted);
+  border-color: var(--border);
+}
+.btn-ghost:hover { background: var(--surface2); }
+
+.btn-export {
+  background: var(--surface);
+  color: var(--export-color);
+  border-color: var(--export-color);
+}
+.btn-export:hover { background: var(--export-light); }
+
+.btn-import {
+  background: var(--surface);
+  color: var(--import-color);
+  border-color: var(--import-color);
+}
+.btn-import:hover { background: var(--import-light); }
+
+/* Edit i Delete dugmad u toolbaru — aktivna samo kada je neka stavka izabrana */
+.btn-edit-top {
+  background: var(--surface);
+  color: var(--edit-color);
+  border-color: var(--edit-color);
+}
+.btn-edit-top:not(:disabled):hover { background: var(--edit-light); }
+
+.btn-delete-top {
+  background: var(--surface);
+  color: var(--danger);
+  border-color: var(--danger);
+}
+.btn-delete-top:not(:disabled):hover { background: var(--danger-light); }
+
+/* ============================================================
+   INLINE FORME (dodavanje / editovanje)
+   ============================================================ */
+.inline-form {
+  border-bottom: 2px solid var(--border);
+  padding: 12px 18px;
+  position: sticky;
+  top: 66px;
+  z-index: 99;
+  background: var(--accent-light);
+  border-bottom-color: var(--accent);
+}
+
+.inline-form.edit-mode {
+  background: var(--edit-light);
+  border-bottom-color: var(--edit-color);
+}
+
+.inline-form.hidden { display: none; }
+
+.inline-form-inner {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.form-label {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+
+.inline-form-inner input {
+  flex: 1;
+  min-width: 160px;
+  padding: 9px 14px;
+  border: 2px solid var(--border);
+  border-radius: var(--radius-sm);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.95rem;
+  background: var(--surface);
+  color: var(--text);
+  outline: none;
+  transition: border-color var(--transition);
+}
+
+.inline-form-inner input:focus { border-color: var(--accent); }
+.edit-mode .inline-form-inner input:focus { border-color: var(--edit-color); }
+
+/* ============================================================
+   LISTA
+   ============================================================ */
+.list-container {
+  padding: 16px 12px;
+}
+
+.shopping-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+/* ============================================================
+   SEPARATOR
+   ============================================================ */
+.separator {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 10px 4px 4px;
+  color: var(--text-muted);
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  list-style: none;
+}
+
+.separator::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+}
+
+/* ============================================================
+   STAVKA
+   ============================================================ */
+.item {
+  background: var(--surface);
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius);
+  display: flex;
+  align-items: center;
+  gap: 0;           /* razmak kontrolišemo kroz checkbox i text zone */
+  padding: 0;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  animation: fadeIn 0.18s ease both;
+  overflow: hidden;
+  transition: border-color var(--transition), opacity var(--transition),
+              transform var(--transition), background var(--transition);
+}
+
+.item.inactive {
+  background: var(--surface2);
+  border-color: var(--border);
+  opacity: 0.6;
+}
+
+.item.selected {
+  border-color: var(--selected-color);
+  background: var(--selected-light);
+  transform: scale(1.01);
+  opacity: 1 !important;
+}
+
+/* ============================================================
+   ZONA ČEKBOKSA  — klik menja status
+   ============================================================ */
+.checkbox-zone {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 14px 16px;
+  cursor: pointer;
+  flex-shrink: 0;
+  /* vizuelno odvojena zona */
+  border-right: 1.5px solid var(--border);
+  background: transparent;
+  transition: background var(--transition);
+  min-height: 56px;
+}
+
+.checkbox-zone:hover {
+  background: var(--accent-light);
+}
+
+.item.selected .checkbox-zone {
+  border-right-color: var(--selected-color);
+}
+
+/* ============================================================
+   CUSTOM CHECKBOX
+   ============================================================ */
+.custom-checkbox {
+  width: 26px;
+  height: 26px;
+  min-width: 26px;
+  border: 2px solid var(--border);
+  border-radius: 7px;
+  background: var(--surface);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all var(--transition);
+  flex-shrink: 0;
+  pointer-events: none;
+}
+
+.item.active .custom-checkbox {
+  background: var(--accent);
+  border-color: var(--accent);
+}
+
+.custom-checkbox::after {
+  content: '';
+  display: none;
+  width: 7px;
+  height: 13px;
+  border: 2.5px solid #fff;
+  border-top: none;
+  border-left: none;
+  transform: rotate(45deg) translateY(-1px);
+}
+
+.item.active .custom-checkbox::after { display: block; }
+
+/* ============================================================
+   ZONA TEKSTA  — kratki tap: ništa, dugi tap: selekcija
+   ============================================================ */
+.text-zone {
+  flex: 1;
+  padding: 14px 16px;
+  cursor: default;       /* pokazuje da nije klikabilno */
+  min-height: 56px;
+  display: flex;
+  align-items: center;
+}
+
+/* Vizuelni hint da dugi pritisak radi nešto */
+.text-zone:active {
+  background: rgba(0,0,0,0.03);
+}
+
+/* ============================================================
+   TEKST STAVKE
+   ============================================================ */
+.item-text {
+  font-size: 1rem;
+  font-weight: 400;
+  color: var(--text);
+  line-height: 1.3;
+  pointer-events: none;
+}
+
+.item.inactive .item-text { color: var(--inactive-text); }
+.item.selected .item-text { color: var(--selected-color); font-weight: 500; }
+
+/* ============================================================
+   INFO PORUKA
+   ============================================================ */
+.info-msg {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 13px 24px;
+  border-radius: var(--radius);
+  font-size: 0.85rem;
+  font-weight: 500;
+  z-index: 300;
+  box-shadow: var(--shadow-lg);
+  animation: slideUp 0.25s ease;
+  max-width: calc(100vw - 32px);
+  text-align: center;
+  pointer-events: none;
+}
+
+.info-msg.hidden { display: none; }
+.info-msg.success { background: var(--accent); color: #fff; }
+.info-msg.error   { background: var(--danger); color: #fff; }
+
+/* ============================================================
+   ANIMACIJE
+   ============================================================ */
+@keyframes slideUp {
+  from { transform: translate(-50%, 20px); opacity: 0; }
+  to   { transform: translate(-50%, 0);    opacity: 1; }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media (max-width: 600px) {
+  html { font-size: 18px; }
+  .header-inner { padding: 10px 12px; }
+  .logo { font-size: 1.3rem; }
+  .btn  { padding: 7px 10px; font-size: 0.8rem; }
+  .list-container { padding: 10px 6px; }
+  .checkbox-zone { padding: 13px 14px; }
+  .text-zone     { padding: 13px 13px; }
+}
+
+@media (max-width: 400px) {
+  html { font-size: 16px; }
+  .toolbar { gap: 4px; }
+  .btn { padding: 6px 8px; font-size: 0.76rem; }
+}

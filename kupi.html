@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="sr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lista za kupovinu</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="kupi.css">
+</head>
+<body>
+
+  <div class="page-wrapper">
+
+    <header class="header">
+      <div class="header-inner">
+        <h1 class="logo">🛒 Kupovina</h1>
+        <div class="toolbar">
+          <button id="btnNew"    class="btn btn-secondary"><span class="btn-icon">＋</span> New</button>
+          <button id="btnEdit"   class="btn btn-edit-top" disabled><span class="btn-icon">✎</span> Edit</button>
+          <button id="btnDelete" class="btn btn-delete-top" disabled><span class="btn-icon">✕</span> Delete</button>
+          <button id="btnReset"  class="btn btn-danger"><span class="btn-icon">↺</span> Reset</button>
+          <button id="btnExport" class="btn btn-export"><span class="btn-icon">⬇</span> Export</button>
+          <button id="btnImport" class="btn btn-import"><span class="btn-icon">⬆</span> Import</button>
+          <input type="file" id="importFileInput" accept=".json" style="display:none">
+        </div>
+      </div>
+    </header>
+
+    <!-- Forma za dodavanje nove stavke -->
+    <div id="addForm" class="inline-form hidden">
+      <div class="inline-form-inner">
+        <span class="form-label">Nova stavka:</span>
+        <input type="text" id="newItemInput" placeholder="Npr: Lidl, mleko" autocomplete="off" />
+        <button id="btnConfirmAdd" class="btn btn-primary">Dodaj</button>
+        <button id="btnCancelAdd"  class="btn btn-ghost">Otkaži</button>
+      </div>
+    </div>
+
+    <!-- Forma za editovanje postojece stavke -->
+    <div id="editForm" class="inline-form hidden">
+      <div class="inline-form-inner">
+        <span class="form-label">Izmena:</span>
+        <input type="text" id="editItemInput" autocomplete="off" />
+        <button id="btnConfirmEdit" class="btn btn-primary">Sačuvaj</button>
+        <button id="btnCancelEdit"  class="btn btn-ghost">Otkaži</button>
+      </div>
+    </div>
+
+    <main class="list-container">
+      <ul id="shoppingList" class="shopping-list"></ul>
+    </main>
+
+    <!-- Info poruka -->
+    <div id="infoMsg" class="info-msg hidden"></div>
+
+  </div>
+
+  <script src="kupi.js"></script>
+</body>
+</html>
