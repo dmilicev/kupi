@@ -37,8 +37,15 @@
   --transition:     0.2s ease;
 }
 
-/* Baza: 32px — još duplo od prethodnih 20px */
-html { font-size: 32px; }
+/*
+  VAŽNO: Ne koristimo html { font-size } jer ga browser na mobilnom
+  može ignorisati ili skalirati zbog device-pixel-ratio.
+  Umesto toga, sve veličine definišemo u px ili vw direktno na elementima.
+*/
+
+html, body {
+  font-size: 16px; /* neutralna baza, ne koristimo je za UI */
+}
 
 body {
   font-family: 'DM Sans', sans-serif;
@@ -46,6 +53,8 @@ body {
   color: var(--text);
   min-height: 100vh;
   line-height: 1.5;
+  /* Onemogući browser zoom pri duplom tapu */
+  touch-action: manipulation;
 }
 
 /* ============================================================
@@ -80,7 +89,7 @@ body {
 
 .logo {
   font-family: 'DM Serif Display', serif;
-  font-size: 1.1rem;
+  font-size: 28px;
   color: var(--accent);
   letter-spacing: -0.5px;
   white-space: nowrap;
@@ -95,21 +104,24 @@ body {
 
 /* ============================================================
    DUGMAD
+   Veličina u px — ista na svim ekranima bez obzira na pixel ratio
    ============================================================ */
 .btn {
   display: inline-flex;
   align-items: center;
-  gap: 4px;
-  padding: 7px 11px;
+  gap: 5px;
+  padding: 10px 16px;
   border-radius: var(--radius-sm);
   border: 2px solid transparent;
   font-family: 'DM Sans', sans-serif;
-  font-size: 0.62rem;
+  font-size: 18px;
   font-weight: 600;
   cursor: pointer;
   transition: all var(--transition);
   white-space: nowrap;
   line-height: 1;
+  /* Minimalna visina za lak dodir prstom */
+  min-height: 44px;
 }
 
 .btn:disabled {
@@ -120,7 +132,7 @@ body {
 
 .btn-icon {
   font-style: normal;
-  font-size: 0.7rem;
+  font-size: 20px;
   line-height: 1;
 }
 
@@ -194,7 +206,7 @@ body {
   border-bottom: 2px solid var(--border);
   padding: 10px 14px;
   position: sticky;
-  top: 60px;          /* prilagođeno visini headera */
+  top: 68px;
   z-index: 99;
   background: var(--accent-light);
   border-bottom-color: var(--accent);
@@ -215,7 +227,7 @@ body {
 }
 
 .form-label {
-  font-size: 0.6rem;
+  font-size: 16px;
   font-weight: 600;
   color: var(--text-muted);
   white-space: nowrap;
@@ -224,11 +236,11 @@ body {
 .inline-form-inner input {
   flex: 1;
   min-width: 140px;
-  padding: 8px 12px;
+  padding: 10px 14px;
   border: 2px solid var(--border);
   border-radius: var(--radius-sm);
   font-family: 'DM Sans', sans-serif;
-  font-size: 0.75rem;
+  font-size: 20px;
   background: var(--surface);
   color: var(--text);
   outline: none;
@@ -249,7 +261,7 @@ body {
   list-style: none;
   display: flex;
   flex-direction: column;
-  gap: 5px;
+  gap: 6px;
 }
 
 /* ============================================================
@@ -259,11 +271,11 @@ body {
   display: flex;
   align-items: center;
   gap: 8px;
-  margin: 8px 4px 3px;
+  margin: 10px 4px 4px;
   color: var(--text-muted);
-  font-size: 0.55rem;
-  font-weight: 600;
-  letter-spacing: 0.08em;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
   list-style: none;
 }
@@ -314,28 +326,29 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 12px 14px;
+  padding: 14px 16px;
   cursor: pointer;
   flex-shrink: 0;
   border-right: 1.5px solid var(--border);
   background: transparent;
   transition: background var(--transition);
-  min-height: 52px;
+  /* Minimalna površina za dodir prstom */
+  min-width: 60px;
+  min-height: 60px;
 }
 
 .checkbox-zone:hover { background: var(--accent-light); }
-
 .item.selected .checkbox-zone { border-right-color: var(--selected-color); }
 
 /* ============================================================
    CUSTOM CHECKBOX
    ============================================================ */
 .custom-checkbox {
-  width: 28px;
-  height: 28px;
-  min-width: 28px;
-  border: 2px solid var(--border);
-  border-radius: 7px;
+  width: 32px;
+  height: 32px;
+  min-width: 32px;
+  border: 2.5px solid var(--border);
+  border-radius: 8px;
   background: var(--surface);
   display: flex;
   align-items: center;
@@ -353,9 +366,9 @@ body {
 .custom-checkbox::after {
   content: '';
   display: none;
-  width: 7px;
-  height: 13px;
-  border: 2.5px solid #fff;
+  width: 8px;
+  height: 15px;
+  border: 3px solid #fff;
   border-top: none;
   border-left: none;
   transform: rotate(45deg) translateY(-1px);
@@ -368,9 +381,9 @@ body {
    ============================================================ */
 .text-zone {
   flex: 1;
-  padding: 12px 14px;
+  padding: 14px 16px;
   cursor: default;
-  min-height: 52px;
+  min-height: 60px;
   display: flex;
   align-items: center;
 }
@@ -378,10 +391,10 @@ body {
 .text-zone:active { background: rgba(0,0,0,0.03); }
 
 /* ============================================================
-   TEKST STAVKE
+   TEKST STAVKE  — 24px apsolutno, nepromenljivo
    ============================================================ */
 .item-text {
-  font-size: 0.8rem;
+  font-size: 24px;
   font-weight: 400;
   color: var(--text);
   line-height: 1.3;
@@ -399,9 +412,9 @@ body {
   bottom: 20px;
   left: 50%;
   transform: translateX(-50%);
-  padding: 10px 20px;
+  padding: 12px 22px;
   border-radius: var(--radius);
-  font-size: 0.62rem;
+  font-size: 18px;
   font-weight: 500;
   z-index: 300;
   box-shadow: var(--shadow-lg);
@@ -421,7 +434,7 @@ body {
 .help-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0,0,0,0.45);
+  background: rgba(0,0,0,0.5);
   z-index: 500;
   display: flex;
   align-items: flex-start;
@@ -436,23 +449,23 @@ body {
   background: var(--surface);
   border-radius: var(--radius);
   box-shadow: var(--shadow-lg);
-  max-width: 700px;
+  max-width: 720px;
   width: 100%;
   position: relative;
-  padding: 28px 24px 28px;
+  padding: 28px 22px;
   margin-top: 8px;
 }
 
 .help-close {
   position: absolute;
   top: 12px;
-  right: 14px;
+  right: 12px;
   background: var(--surface2);
   border: 2px solid var(--border);
   border-radius: 8px;
-  width: 36px;
-  height: 36px;
-  font-size: 0.75rem;
+  width: 44px;
+  height: 44px;
+  font-size: 20px;
   font-weight: 700;
   cursor: pointer;
   display: flex;
@@ -481,12 +494,12 @@ body {
   padding: 14px 16px;
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 6px;
 }
 
 .help-app-name {
   font-family: 'DM Serif Display', serif;
-  font-size: 0.85rem;
+  font-size: 22px;
   color: var(--accent);
   font-weight: 700;
 }
@@ -495,24 +508,24 @@ body {
   display: flex;
   flex-direction: column;
   gap: 2px;
-  font-size: 0.6rem;
+  font-size: 16px;
   color: var(--text-muted);
 }
 
 .help-content p {
-  font-size: 0.65rem;
+  font-size: 18px;
   color: var(--text);
-  line-height: 1.6;
+  line-height: 1.65;
 }
 
 .help-section-title {
-  font-size: 0.65rem;
+  font-size: 16px;
   font-weight: 700;
   color: var(--accent);
   text-transform: uppercase;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.07em;
   border-bottom: 1.5px solid var(--accent-light);
-  padding-bottom: 4px;
+  padding-bottom: 5px;
   margin-top: 4px;
 }
 
@@ -520,7 +533,7 @@ body {
   display: flex;
   gap: 10px;
   align-items: flex-start;
-  font-size: 0.62rem;
+  font-size: 18px;
   line-height: 1.5;
 }
 
@@ -528,12 +541,12 @@ body {
   background: var(--surface2);
   border: 1.5px solid var(--border);
   border-radius: 6px;
-  padding: 2px 8px;
+  padding: 3px 10px;
   font-weight: 700;
   color: var(--text);
   white-space: nowrap;
   flex-shrink: 0;
-  font-size: 0.58rem;
+  font-size: 16px;
 }
 
 .help-desc {
@@ -543,7 +556,7 @@ body {
 .help-places {
   display: flex;
   flex-direction: column;
-  gap: 5px;
+  gap: 6px;
   background: var(--surface2);
   border-radius: var(--radius-sm);
   padding: 12px 14px;
@@ -553,7 +566,7 @@ body {
   display: flex;
   align-items: center;
   gap: 10px;
-  font-size: 0.62rem;
+  font-size: 18px;
   color: var(--text);
 }
 
@@ -561,10 +574,10 @@ body {
   background: var(--accent);
   color: #fff;
   border-radius: 5px;
-  padding: 1px 8px;
+  padding: 2px 10px;
   font-weight: 700;
-  font-size: 0.58rem;
-  min-width: 28px;
+  font-size: 16px;
+  min-width: 32px;
   text-align: center;
 }
 
@@ -582,27 +595,25 @@ body {
 }
 
 /* ============================================================
-   RESPONSIVE
+   RESPONSIVE — samo layout, NE menjamo veličine fonta i dugmadi
+   Na mobilnom ekranu smanjujemo padding da stane više stavki,
+   ali font ostaje isti px broj.
    ============================================================ */
-@media (max-width: 700px) {
-  html { font-size: 26px; }
-  .btn { padding: 6px 9px; font-size: 0.6rem; }
-}
-
-@media (max-width: 480px) {
-  html { font-size: 22px; }
-  .header-inner { padding: 8px 10px; }
-  .logo { font-size: 1rem; }
-  .btn { padding: 6px 8px; font-size: 0.58rem; }
+@media (max-width: 600px) {
+  .header-inner { padding: 8px 10px; gap: 6px; }
+  .toolbar { gap: 4px; }
+  .btn { padding: 8px 11px; font-size: 16px; min-height: 42px; }
+  .btn-icon { font-size: 18px; }
+  .logo { font-size: 22px; }
   .list-container { padding: 8px 5px; }
-  .checkbox-zone { padding: 11px 12px; }
-  .text-zone { padding: 11px 12px; }
-  .inline-form { top: 54px; }
-  .help-panel { padding: 22px 16px; }
+  .checkbox-zone { padding: 12px 13px; min-width: 56px; min-height: 56px; }
+  .text-zone { padding: 12px 12px; min-height: 56px; }
+  .inline-form { top: 60px; padding: 8px 10px; }
+  .help-panel { padding: 20px 14px; }
 }
 
-@media (max-width: 360px) {
-  html { font-size: 19px; }
+@media (max-width: 400px) {
+  .btn { padding: 7px 9px; font-size: 15px; }
   .toolbar { gap: 3px; }
-  .btn { padding: 5px 7px; font-size: 0.56rem; }
+  .logo { font-size: 20px; }
 }
