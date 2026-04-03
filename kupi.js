@@ -1,5 +1,5 @@
 // ============================================================
-// POČETNI PODACI
+// POČETNI PODACI  (iz tvog uploadovanog kupi.js)
 // ============================================================
 const DEFAULT_ITEMS = [
   { name: "p jabuke",                   active: true  },
@@ -23,12 +23,14 @@ const DEFAULT_ITEMS = [
 // ============================================================
 // STATE
 // ============================================================
-const STORAGE_KEY   = "kupi_items_v1";
-let items           = [];
-let selectedIndex   = null;   // stavka izabrana dugim pritiskom
-let longPressTimer  = null;
-let longPressFired  = false;
-const LONG_PRESS_MS = 1000;
+const STORAGE_KEY  = "kupi_items_v1";
+let items          = [];
+let selectedIndex  = null;
+
+// --- Dugi pritisak ---
+// Koristimo jednu promenljivu po stavci, ne globalnu.
+// Za svaku text-zone čuvamo timer i flag zasebno kroz closure.
+const LONG_PRESS_MS = 400;   // skraćeno sa 600 na 400ms
 
 // ============================================================
 // PERSISTENCIJA
@@ -54,7 +56,7 @@ function saveItems() {
 }
 
 // ============================================================
-// SORTIRANJE  (uvek se poziva nakon svake izmene)
+// SORTIRANJE
 // ============================================================
 function sortItems() {
   items.sort((a, b) => {
@@ -64,12 +66,12 @@ function sortItems() {
 }
 
 // ============================================================
-// TOOLBAR DUGMAD — Edit i Delete se aktiviraju/deaktiviraju
+// TOOLBAR
 // ============================================================
 function updateToolbar() {
-  const hasSelection = selectedIndex !== null;
-  document.getElementById("btnEdit").disabled   = !hasSelection;
-  document.getElementById("btnDelete").disabled = !hasSelection;
+  const has = selectedIndex !== null;
+  document.getElementById("btnEdit").disabled   = !has;
+  document.getElementById("btnDelete").disabled = !has;
 }
 
 // ============================================================
@@ -98,11 +100,9 @@ function render() {
       (selectedIndex === index ? " selected" : "");
     li.dataset.index = index;
 
-    // ---- ZONA ČEKBOKSA ----------------------------------------
-    // Klik na ovu zonu menja status aktivno/neaktivno
+    // ---- ZONA ČEKBOKSA ----
     const checkZone = document.createElement("div");
     checkZone.className = "checkbox-zone";
-
     const cb = document.createElement("span");
     cb.className = "custom-checkbox";
     checkZone.appendChild(cb);
@@ -118,64 +118,75 @@ function render() {
 
     li.appendChild(checkZone);
 
-    // ---- ZONA TEKSTA ------------------------------------------
-    // Kratki tap: ništa
-    // Dugi tap (600ms): selektuj stavku
+    // ---- ZONA TEKSTA ----
     const textZone = document.createElement("div");
     textZone.className = "text-zone";
-
     const txt = document.createElement("span");
     txt.className = "item-text";
     txt.textContent = item.name;
     textZone.appendChild(txt);
 
-    // --- Touch (mobilni) ---
+    // Svaka text-zone ima sopstveni timer i flag (closure)
+    let lp_timer  = null;
+    let lp_fired  = false;
+    let lp_moved  = false;
+
+    // === TOUCH ===
     textZone.addEventListener("touchstart", (e) => {
-      longPressFired = false;
-      longPressTimer = setTimeout(() => {
-        longPressFired = true;
-        selectItem(index);
+      lp_fired = false;
+      lp_moved = false;
+      lp_timer = setTimeout(() => {
+        if (!lp_moved) {
+          lp_fired = true;
+          selectItem(index);
+        }
       }, LONG_PRESS_MS);
     }, { passive: true });
 
+    textZone.addEventListener("touchmove", () => {
+      // Ako se prst pomeri, otkazujemo dugi pritisak
+      lp_moved = true;
+      clearTimeout(lp_timer);
+    }, { passive: true });
+
     textZone.addEventListener("touchend", (e) => {
-      clearTimeout(longPressTimer);
-      // Ako je dugi pritisak već okidnut, sprečimo da browser
-      // ne okine i click event
-      if (longPressFired) {
+      clearTimeout(lp_timer);
+      if (lp_fired) {
+        // Sprečavamo ghost click koji bi odmah deselektovao
         e.preventDefault();
+        e.stopPropagation();
       }
     });
 
-    textZone.addEventListener("touchmove", () => {
-      clearTimeout(longPressTimer);
+    textZone.addEventListener("touchcancel", () => {
+      clearTimeout(lp_timer);
     });
 
-    // --- Desktop: dugi klik mišem (mousedown + timeout) ---
+    // === DESKTOP: levi klik + držanje ===
     textZone.addEventListener("mousedown", (e) => {
-      if (e.button !== 0) return; // samo levi klik
-      longPressFired = false;
-      longPressTimer = setTimeout(() => {
-        longPressFired = true;
+      if (e.button !== 0) return;
+      lp_fired = false;
+      lp_timer = setTimeout(() => {
+        lp_fired = true;
         selectItem(index);
       }, LONG_PRESS_MS);
     });
 
     textZone.addEventListener("mouseup", () => {
-      clearTimeout(longPressTimer);
+      clearTimeout(lp_timer);
+      // Kratki klik: ne radimo ništa (lp_fired je false)
     });
 
     textZone.addEventListener("mouseleave", () => {
-      clearTimeout(longPressTimer);
+      clearTimeout(lp_timer);
     });
 
-    // Kratki klik mišem na tekst — ne radi ništa
+    // Kratki klik — ništa
     textZone.addEventListener("click", (e) => {
       e.stopPropagation();
-      // namerno prazno
     });
 
-    // Desni klik — selektuj (kao alternativa dugom pritisku na desktopu)
+    // Desni klik — selekcija (alternativa na desktopu)
     textZone.addEventListener("contextmenu", (e) => {
       e.preventDefault();
       selectItem(index);
@@ -199,7 +210,6 @@ function makeSeparator(text) {
 // SELEKCIJA
 // ============================================================
 function selectItem(index) {
-  // Ako se klikne na već izabranu — deselektuj
   if (selectedIndex === index) {
     clearSelection();
   } else {
@@ -220,7 +230,6 @@ function openEditForm() {
   if (selectedIndex === null) return;
   const index = selectedIndex;
   closeAddForm();
-
   const form  = document.getElementById("editForm");
   const input = document.getElementById("editItemInput");
   form.classList.remove("hidden");
@@ -236,7 +245,6 @@ function confirmEdit() {
   const index   = parseInt(input.dataset.editIndex);
   const newName = input.value.trim();
   if (!newName) { input.focus(); return; }
-
   const duplicate = items.some((it, i) =>
     i !== index && it.name.toLowerCase() === newName.toLowerCase()
   );
@@ -245,7 +253,6 @@ function confirmEdit() {
     input.select();
     return;
   }
-
   items[index].name = newName;
   sortItems();
   saveItems();
@@ -274,21 +281,19 @@ function openAddForm() {
   if (!form.classList.contains("hidden")) {
     document.getElementById("newItemInput").focus();
   }
-  render(); // osveži toolbar
+  render();
 }
 
 function confirmAdd() {
   const input = document.getElementById("newItemInput");
   const name  = input.value.trim();
   if (!name) { input.focus(); return; }
-
   const duplicate = items.some(i => i.name.toLowerCase() === name.toLowerCase());
   if (duplicate) {
     alert('Stavka "' + name + '" već postoji na listi.');
     input.select();
     return;
   }
-
   items.push({ name, active: true });
   sortItems();
   saveItems();
@@ -326,16 +331,16 @@ function deleteSelected() {
 // ============================================================
 function exportItems() {
   try {
-    const data  = JSON.stringify(items, null, 2);
-    const blob  = new Blob([data], { type: "application/json" });
-    const url   = URL.createObjectURL(blob);
-    const a     = document.createElement("a");
-    const d     = new Date();
-    const ds    = d.getFullYear() + "-" +
-                  String(d.getMonth() + 1).padStart(2, "0") + "-" +
-                  String(d.getDate()).padStart(2, "0");
-    a.href      = url;
-    a.download  = "kupi-" + ds + ".json";
+    const data = JSON.stringify(items, null, 2);
+    const blob = new Blob([data], { type: "application/json" });
+    const url  = URL.createObjectURL(blob);
+    const a    = document.createElement("a");
+    const d    = new Date();
+    const ds   = d.getFullYear() + "-" +
+                 String(d.getMonth() + 1).padStart(2, "0") + "-" +
+                 String(d.getDate()).padStart(2, "0");
+    a.href     = url;
+    a.download = "kupi-" + ds + ".json";
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
@@ -393,13 +398,34 @@ function showInfo(msg, type) {
 }
 
 // ============================================================
+// HELP
+// ============================================================
+function openHelp() {
+  document.getElementById("helpOverlay").classList.remove("hidden");
+  // Scroll panel na vrh pri svakom otvaranju
+  const panel = document.querySelector(".help-panel");
+  if (panel) panel.scrollTop = 0;
+  // Scroll overlay na vrh
+  document.getElementById("helpOverlay").scrollTop = 0;
+}
+
+function closeHelp() {
+  document.getElementById("helpOverlay").classList.add("hidden");
+}
+
+// ============================================================
 // EVENT LISTENERI — TOOLBAR
 // ============================================================
 document.getElementById("btnNew").addEventListener("click", openAddForm);
-
 document.getElementById("btnEdit").addEventListener("click", openEditForm);
-
 document.getElementById("btnDelete").addEventListener("click", deleteSelected);
+document.getElementById("btnHelp").addEventListener("click", openHelp);
+document.getElementById("btnHelpClose").addEventListener("click", closeHelp);
+
+// Klik na tamni overlay (van panela) zatvara help
+document.getElementById("helpOverlay").addEventListener("click", (e) => {
+  if (e.target === document.getElementById("helpOverlay")) closeHelp();
+});
 
 document.getElementById("btnReset").addEventListener("click", () => {
   if (!confirm("Resetovati sve stavke na neaktivno?")) return;
@@ -425,9 +451,7 @@ document.getElementById("importFileInput").addEventListener("change", (e) => {
 // EVENT LISTENERI — FORME
 // ============================================================
 document.getElementById("btnConfirmAdd").addEventListener("click", confirmAdd);
-document.getElementById("btnCancelAdd").addEventListener("click", () => {
-  closeAddForm();
-});
+document.getElementById("btnCancelAdd").addEventListener("click", closeAddForm);
 document.getElementById("newItemInput").addEventListener("keydown", (e) => {
   if (e.key === "Enter")  confirmAdd();
   if (e.key === "Escape") closeAddForm();
@@ -444,7 +468,7 @@ document.getElementById("editItemInput").addEventListener("keydown", (e) => {
   if (e.key === "Escape") { closeEditForm(); clearSelection(); render(); }
 });
 
-// Klik na pozadinu deselektuje
+// Klik na pozadinu deselektuje stavku
 document.addEventListener("click", (e) => {
   if (selectedIndex !== null &&
       !e.target.closest(".item") &&

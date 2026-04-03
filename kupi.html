@@ -23,6 +23,7 @@
           <button id="btnReset"  class="btn btn-danger"><span class="btn-icon">↺</span> Reset</button>
           <button id="btnExport" class="btn btn-export"><span class="btn-icon">⬇</span> Export</button>
           <button id="btnImport" class="btn btn-import"><span class="btn-icon">⬆</span> Import</button>
+          <button id="btnHelp"   class="btn btn-help"><span class="btn-icon">?</span> Help</button>
           <input type="file" id="importFileInput" accept=".json" style="display:none">
         </div>
       </div>
@@ -54,6 +55,83 @@
 
     <!-- Info poruka -->
     <div id="infoMsg" class="info-msg hidden"></div>
+
+    <!-- Help panel -->
+    <div id="helpOverlay" class="help-overlay hidden">
+      <div class="help-panel">
+        <button id="btnHelpClose" class="help-close" aria-label="Zatvori pomoć">✕</button>
+        <div class="help-content">
+          <div class="help-header">
+            <div class="help-title-row">
+              <span class="help-app-name">Aplikacija: Kupi</span>
+            </div>
+            <div class="help-meta">
+              <span>Autor: Dragan Milićev</span>
+              <span>Email: dmilicev@gmail.com</span>
+              <span>Datum: 03.04.2026.</span>
+            </div>
+          </div>
+
+          <p>Aplikacija Kupi je jednostavan podsetnik za kupovinu namenjen brzom i lakom pravljenju spiska namirnica na mobilnom telefonu.</p>
+
+          <p>Aplikacija sadrži podrazumevani spisak stavki. Na vrhu se nalaze aktivne stavke (označene čekboksom) koje je potrebno kupiti, dok se ispod nalaze neaktivne stavke.</p>
+
+          <p>Neaktivne stavke ostaju sačuvane kako bi se kasnije mogle ponovo aktivirati bez potrebe za ponovnim unosom.</p>
+
+          <div class="help-section-title">Korišćenje</div>
+
+          <div class="help-item">
+            <span class="help-label">Čekboks</span>
+            <span class="help-desc">Klikom na čekboks menja se status stavke (aktivna / neaktivna).</span>
+          </div>
+          <div class="help-item">
+            <span class="help-label">New</span>
+            <span class="help-desc">Unos nove stavke. Nova stavka se automatski dodaje kao aktivna.</span>
+          </div>
+          <div class="help-item">
+            <span class="help-label">Izbor stavke</span>
+            <span class="help-desc">Dugi pritisak prsta (mobilni) ili desni klik miša (računar) na naziv stavke.</span>
+          </div>
+          <div class="help-item">
+            <span class="help-label">Edit</span>
+            <span class="help-desc">Izmena izabrane stavke.</span>
+          </div>
+          <div class="help-item">
+            <span class="help-label">Sortiranje</span>
+            <span class="help-desc">Nakon dodavanja ili izmene stavke, vrši se automatsko sortiranje po abecednom redosledu.</span>
+          </div>
+          <div class="help-item">
+            <span class="help-label">Delete</span>
+            <span class="help-desc">Brisanje izabrane stavke.</span>
+          </div>
+          <div class="help-item">
+            <span class="help-label">Reset</span>
+            <span class="help-desc">Sve stavke postaju neaktivne.</span>
+          </div>
+          <div class="help-item">
+            <span class="help-label">Export</span>
+            <span class="help-desc">Čuvanje svih stavki (aktivnih i neaktivnih) u JSON fajl.</span>
+          </div>
+          <div class="help-item">
+            <span class="help-label">Import</span>
+            <span class="help-desc">Učitavanje prethodno sačuvanih stavki iz JSON fajla.</span>
+          </div>
+
+          <div class="help-section-title">Sortiranje po mestu kupovine</div>
+
+          <p>Ovakav način sortiranja omogućava grupisanje stavki prema mestu kupovine. Ako naziv stavke započnete imenom ili početnim slovom mesta kupovine, stavke će biti grupisane zajedno. Kada uđete u određenu prodavnicu, biće grupisane stavke koje tu kupujete.</p>
+
+          <div class="help-places">
+            <div class="help-place-row"><span class="place-tag">p</span><span>pijaca</span></div>
+            <div class="help-place-row"><span class="place-tag">v</span><span>voćara</span></div>
+            <div class="help-place-row"><span class="place-tag">s</span><span>samoposluga</span></div>
+            <div class="help-place-row"><span class="place-tag">a</span><span>apoteka</span></div>
+            <div class="help-place-row"><span class="place-tag">z</span><span>zdrava hrana</span></div>
+            <div class="help-place-row"><span class="place-tag">…</span><span>Lidl, UniomZ, DIS i slično</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
 
   </div>
 

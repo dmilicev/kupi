@@ -25,17 +25,20 @@
   --export-light:   #f3e5f5;
   --import-color:   #e65100;
   --import-light:   #fff3e0;
+  --help-color:     #006064;
+  --help-light:     #e0f7fa;
   --selected-color: #e65100;
   --selected-light: #fff3e0;
   --inactive-text:  #a09880;
   --shadow:         0 2px 12px rgba(0,0,0,0.08);
-  --shadow-lg:      0 8px 32px rgba(0,0,0,0.14);
+  --shadow-lg:      0 8px 32px rgba(0,0,0,0.16);
   --radius:         14px;
   --radius-sm:      10px;
   --transition:     0.2s ease;
 }
 
-html { font-size: 20px; }   /* OSNOVA: duplo veća od uobičajenih 16px */
+/* Baza: 32px — još duplo od prethodnih 20px */
+html { font-size: 32px; }
 
 body {
   font-family: 'DM Sans', sans-serif;
@@ -49,7 +52,7 @@ body {
    PAGE WRAPPER
    ============================================================ */
 .page-wrapper {
-  max-width: 780px;
+  max-width: 900px;
   margin: 0 auto;
   padding-bottom: 100px;
 }
@@ -70,14 +73,14 @@ body {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 10px;
-  padding: 12px 18px;
+  gap: 8px;
+  padding: 10px 14px;
   flex-wrap: wrap;
 }
 
 .logo {
   font-family: 'DM Serif Display', serif;
-  font-size: 1.5rem;
+  font-size: 1.1rem;
   color: var(--accent);
   letter-spacing: -0.5px;
   white-space: nowrap;
@@ -85,7 +88,7 @@ body {
 
 .toolbar {
   display: flex;
-  gap: 6px;
+  gap: 5px;
   flex-wrap: wrap;
   align-items: center;
 }
@@ -96,12 +99,12 @@ body {
 .btn {
   display: inline-flex;
   align-items: center;
-  gap: 5px;
-  padding: 8px 14px;
+  gap: 4px;
+  padding: 7px 11px;
   border-radius: var(--radius-sm);
   border: 2px solid transparent;
   font-family: 'DM Sans', sans-serif;
-  font-size: 0.85rem;
+  font-size: 0.62rem;
   font-weight: 600;
   cursor: pointer;
   transition: all var(--transition);
@@ -117,7 +120,7 @@ body {
 
 .btn-icon {
   font-style: normal;
-  font-size: 0.95rem;
+  font-size: 0.7rem;
   line-height: 1;
 }
 
@@ -163,7 +166,13 @@ body {
 }
 .btn-import:hover { background: var(--import-light); }
 
-/* Edit i Delete dugmad u toolbaru — aktivna samo kada je neka stavka izabrana */
+.btn-help {
+  background: var(--surface);
+  color: var(--help-color);
+  border-color: var(--help-color);
+}
+.btn-help:hover { background: var(--help-light); }
+
 .btn-edit-top {
   background: var(--surface);
   color: var(--edit-color);
@@ -183,9 +192,9 @@ body {
    ============================================================ */
 .inline-form {
   border-bottom: 2px solid var(--border);
-  padding: 12px 18px;
+  padding: 10px 14px;
   position: sticky;
-  top: 66px;
+  top: 60px;          /* prilagođeno visini headera */
   z-index: 99;
   background: var(--accent-light);
   border-bottom-color: var(--accent);
@@ -200,13 +209,13 @@ body {
 
 .inline-form-inner {
   display: flex;
-  gap: 8px;
+  gap: 7px;
   align-items: center;
   flex-wrap: wrap;
 }
 
 .form-label {
-  font-size: 0.78rem;
+  font-size: 0.6rem;
   font-weight: 600;
   color: var(--text-muted);
   white-space: nowrap;
@@ -214,12 +223,12 @@ body {
 
 .inline-form-inner input {
   flex: 1;
-  min-width: 160px;
-  padding: 9px 14px;
+  min-width: 140px;
+  padding: 8px 12px;
   border: 2px solid var(--border);
   border-radius: var(--radius-sm);
   font-family: 'DM Sans', sans-serif;
-  font-size: 0.95rem;
+  font-size: 0.75rem;
   background: var(--surface);
   color: var(--text);
   outline: none;
@@ -233,14 +242,14 @@ body {
    LISTA
    ============================================================ */
 .list-container {
-  padding: 16px 12px;
+  padding: 12px 8px;
 }
 
 .shopping-list {
   list-style: none;
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 5px;
 }
 
 /* ============================================================
@@ -249,10 +258,10 @@ body {
 .separator {
   display: flex;
   align-items: center;
-  gap: 10px;
-  margin: 10px 4px 4px;
+  gap: 8px;
+  margin: 8px 4px 3px;
   color: var(--text-muted);
-  font-size: 0.7rem;
+  font-size: 0.55rem;
   font-weight: 600;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -275,7 +284,7 @@ body {
   border-radius: var(--radius);
   display: flex;
   align-items: center;
-  gap: 0;           /* razmak kontrolišemo kroz checkbox i text zone */
+  gap: 0;
   padding: 0;
   user-select: none;
   -webkit-tap-highlight-color: transparent;
@@ -299,37 +308,32 @@ body {
 }
 
 /* ============================================================
-   ZONA ČEKBOKSA  — klik menja status
+   ZONA ČEKBOKSA
    ============================================================ */
 .checkbox-zone {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 14px 16px;
+  padding: 12px 14px;
   cursor: pointer;
   flex-shrink: 0;
-  /* vizuelno odvojena zona */
   border-right: 1.5px solid var(--border);
   background: transparent;
   transition: background var(--transition);
-  min-height: 56px;
+  min-height: 52px;
 }
 
-.checkbox-zone:hover {
-  background: var(--accent-light);
-}
+.checkbox-zone:hover { background: var(--accent-light); }
 
-.item.selected .checkbox-zone {
-  border-right-color: var(--selected-color);
-}
+.item.selected .checkbox-zone { border-right-color: var(--selected-color); }
 
 /* ============================================================
    CUSTOM CHECKBOX
    ============================================================ */
 .custom-checkbox {
-  width: 26px;
-  height: 26px;
-  min-width: 26px;
+  width: 28px;
+  height: 28px;
+  min-width: 28px;
   border: 2px solid var(--border);
   border-radius: 7px;
   background: var(--surface);
@@ -360,27 +364,24 @@ body {
 .item.active .custom-checkbox::after { display: block; }
 
 /* ============================================================
-   ZONA TEKSTA  — kratki tap: ništa, dugi tap: selekcija
+   ZONA TEKSTA
    ============================================================ */
 .text-zone {
   flex: 1;
-  padding: 14px 16px;
-  cursor: default;       /* pokazuje da nije klikabilno */
-  min-height: 56px;
+  padding: 12px 14px;
+  cursor: default;
+  min-height: 52px;
   display: flex;
   align-items: center;
 }
 
-/* Vizuelni hint da dugi pritisak radi nešto */
-.text-zone:active {
-  background: rgba(0,0,0,0.03);
-}
+.text-zone:active { background: rgba(0,0,0,0.03); }
 
 /* ============================================================
    TEKST STAVKE
    ============================================================ */
 .item-text {
-  font-size: 1rem;
+  font-size: 0.8rem;
   font-weight: 400;
   color: var(--text);
   line-height: 1.3;
@@ -395,17 +396,17 @@ body {
    ============================================================ */
 .info-msg {
   position: fixed;
-  bottom: 24px;
+  bottom: 20px;
   left: 50%;
   transform: translateX(-50%);
-  padding: 13px 24px;
+  padding: 10px 20px;
   border-radius: var(--radius);
-  font-size: 0.85rem;
+  font-size: 0.62rem;
   font-weight: 500;
   z-index: 300;
   box-shadow: var(--shadow-lg);
   animation: slideUp 0.25s ease;
-  max-width: calc(100vw - 32px);
+  max-width: calc(100vw - 24px);
   text-align: center;
   pointer-events: none;
 }
@@ -413,6 +414,159 @@ body {
 .info-msg.hidden { display: none; }
 .info-msg.success { background: var(--accent); color: #fff; }
 .info-msg.error   { background: var(--danger); color: #fff; }
+
+/* ============================================================
+   HELP OVERLAY
+   ============================================================ */
+.help-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.45);
+  z-index: 500;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 16px 10px 40px;
+  overflow-y: auto;
+}
+
+.help-overlay.hidden { display: none; }
+
+.help-panel {
+  background: var(--surface);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-lg);
+  max-width: 700px;
+  width: 100%;
+  position: relative;
+  padding: 28px 24px 28px;
+  margin-top: 8px;
+}
+
+.help-close {
+  position: absolute;
+  top: 12px;
+  right: 14px;
+  background: var(--surface2);
+  border: 2px solid var(--border);
+  border-radius: 8px;
+  width: 36px;
+  height: 36px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-muted);
+  transition: all var(--transition);
+}
+
+.help-close:hover {
+  background: var(--danger-light);
+  border-color: var(--danger);
+  color: var(--danger);
+}
+
+.help-content {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.help-header {
+  background: var(--accent-light);
+  border: 1.5px solid var(--accent);
+  border-radius: var(--radius-sm);
+  padding: 14px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.help-app-name {
+  font-family: 'DM Serif Display', serif;
+  font-size: 0.85rem;
+  color: var(--accent);
+  font-weight: 700;
+}
+
+.help-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  font-size: 0.6rem;
+  color: var(--text-muted);
+}
+
+.help-content p {
+  font-size: 0.65rem;
+  color: var(--text);
+  line-height: 1.6;
+}
+
+.help-section-title {
+  font-size: 0.65rem;
+  font-weight: 700;
+  color: var(--accent);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  border-bottom: 1.5px solid var(--accent-light);
+  padding-bottom: 4px;
+  margin-top: 4px;
+}
+
+.help-item {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  font-size: 0.62rem;
+  line-height: 1.5;
+}
+
+.help-label {
+  background: var(--surface2);
+  border: 1.5px solid var(--border);
+  border-radius: 6px;
+  padding: 2px 8px;
+  font-weight: 700;
+  color: var(--text);
+  white-space: nowrap;
+  flex-shrink: 0;
+  font-size: 0.58rem;
+}
+
+.help-desc {
+  color: var(--text);
+}
+
+.help-places {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  background: var(--surface2);
+  border-radius: var(--radius-sm);
+  padding: 12px 14px;
+}
+
+.help-place-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.62rem;
+  color: var(--text);
+}
+
+.place-tag {
+  background: var(--accent);
+  color: #fff;
+  border-radius: 5px;
+  padding: 1px 8px;
+  font-weight: 700;
+  font-size: 0.58rem;
+  min-width: 28px;
+  text-align: center;
+}
 
 /* ============================================================
    ANIMACIJE
@@ -430,18 +584,25 @@ body {
 /* ============================================================
    RESPONSIVE
    ============================================================ */
-@media (max-width: 600px) {
-  html { font-size: 18px; }
-  .header-inner { padding: 10px 12px; }
-  .logo { font-size: 1.3rem; }
-  .btn  { padding: 7px 10px; font-size: 0.8rem; }
-  .list-container { padding: 10px 6px; }
-  .checkbox-zone { padding: 13px 14px; }
-  .text-zone     { padding: 13px 13px; }
+@media (max-width: 700px) {
+  html { font-size: 26px; }
+  .btn { padding: 6px 9px; font-size: 0.6rem; }
 }
 
-@media (max-width: 400px) {
-  html { font-size: 16px; }
-  .toolbar { gap: 4px; }
-  .btn { padding: 6px 8px; font-size: 0.76rem; }
+@media (max-width: 480px) {
+  html { font-size: 22px; }
+  .header-inner { padding: 8px 10px; }
+  .logo { font-size: 1rem; }
+  .btn { padding: 6px 8px; font-size: 0.58rem; }
+  .list-container { padding: 8px 5px; }
+  .checkbox-zone { padding: 11px 12px; }
+  .text-zone { padding: 11px 12px; }
+  .inline-form { top: 54px; }
+  .help-panel { padding: 22px 16px; }
+}
+
+@media (max-width: 360px) {
+  html { font-size: 19px; }
+  .toolbar { gap: 3px; }
+  .btn { padding: 5px 7px; font-size: 0.56rem; }
 }
