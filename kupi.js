@@ -1,5 +1,5 @@
 // ============================================================
-// POČETNI PODACI  (iz tvog uploadovanog kupi.js)
+// POČETNI PODACI
 // ============================================================
 const DEFAULT_ITEMS = [
   { name: "p jabuke",                   active: true  },
@@ -27,10 +27,14 @@ const STORAGE_KEY  = "kupi_items_v1";
 let items          = [];
 let selectedIndex  = null;
 
-// --- Dugi pritisak ---
-// Koristimo jednu promenljivu po stavci, ne globalnu.
-// Za svaku text-zone čuvamo timer i flag zasebno kroz closure.
-const LONG_PRESS_MS = 400;   // skraćeno sa 600 na 400ms
+// Dupli tap: maksimalni razmak između dva uzastopna tapa
+const DOUBLE_TAP_MS = 350;
+
+// ============================================================
+// DETEKCIJA TOUCH UREĐAJA
+// ============================================================
+const isTouchDevice = () =>
+  ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
 
 // ============================================================
 // PERSISTENCIJA
@@ -81,17 +85,21 @@ function render() {
   const ul = document.getElementById("shoppingList");
   ul.innerHTML = "";
 
+  const touch = isTouchDevice();
+  const activeLabel   = touch ? "Za kupovinu  •  dupli tap = označi" : "Za kupovinu";
+  const inactiveLabel = touch ? "Nije označeno  •  dupli tap = označi" : "Nije označeno";
+
   let activeSepAdded   = false;
   let inactiveSepAdded = false;
 
   items.forEach((item, index) => {
     if (item.active && !activeSepAdded) {
       activeSepAdded = true;
-      ul.appendChild(makeSeparator("Za kupovinu"));
+      ul.appendChild(makeSeparator(activeLabel));
     }
     if (!item.active && !inactiveSepAdded) {
       inactiveSepAdded = true;
-      ul.appendChild(makeSeparator("Nije označeno"));
+      ul.appendChild(makeSeparator(inactiveLabel));
     }
 
     const li = document.createElement("li");
@@ -126,67 +134,62 @@ function render() {
     txt.textContent = item.name;
     textZone.appendChild(txt);
 
-    // Svaka text-zone ima sopstveni timer i flag (closure)
-    let lp_timer  = null;
-    let lp_fired  = false;
-    let lp_moved  = false;
+    // =====================================================
+    // MOBILNI: DUPLI TAP za selekciju
+    // Koristimo touchstart jer se okida cim prst dotakne ekran.
+    // touch-action: none na .text-zone (CSS) sprecava browser
+    // da preuzme dupli tap pre nego sto JS ga dobije.
+    // =====================================================
+    let lastTapTime = 0;
 
-    // === TOUCH ===
     textZone.addEventListener("touchstart", (e) => {
-      lp_fired = false;
-      lp_moved = false;
-      lp_timer = setTimeout(() => {
-        if (!lp_moved) {
-          lp_fired = true;
-          selectItem(index);
-        }
-      }, LONG_PRESS_MS);
-    }, { passive: true });
-
-    textZone.addEventListener("touchmove", () => {
-      // Ako se prst pomeri, otkazujemo dugi pritisak
-      lp_moved = true;
-      clearTimeout(lp_timer);
-    }, { passive: true });
-
-    textZone.addEventListener("touchend", (e) => {
-      clearTimeout(lp_timer);
-      if (lp_fired) {
-        // Sprečavamo ghost click koji bi odmah deselektovao
+      const now = Date.now();
+      const diff = now - lastTapTime;
+      if (diff > 0 && diff < DOUBLE_TAP_MS) {
+        // Dupli tap detektovan
         e.preventDefault();
         e.stopPropagation();
+        lastTapTime = 0;
+        selectItem(index);
+      } else {
+        // Prvi tap - pamtimo vreme
+        lastTapTime = now;
       }
-    });
+    }, { passive: false });
 
-    textZone.addEventListener("touchcancel", () => {
-      clearTimeout(lp_timer);
-    });
+    textZone.addEventListener("touchend", (e) => {
+      // Namerno prazno - sva logika je u touchstart
+    }, { passive: true });
 
-    // === DESKTOP: levi klik + držanje ===
+    // =====================================================
+    // DESKTOP: kratki klik = ništa, dugi klik/desni klik = selekcija
+    // =====================================================
+    let lp_timer = null;
+    let lp_fired = false;
+
     textZone.addEventListener("mousedown", (e) => {
       if (e.button !== 0) return;
       lp_fired = false;
       lp_timer = setTimeout(() => {
         lp_fired = true;
         selectItem(index);
-      }, LONG_PRESS_MS);
+      }, 400);
     });
 
     textZone.addEventListener("mouseup", () => {
       clearTimeout(lp_timer);
-      // Kratki klik: ne radimo ništa (lp_fired je false)
     });
 
     textZone.addEventListener("mouseleave", () => {
       clearTimeout(lp_timer);
     });
 
-    // Kratki klik — ništa
+    // Kratki klik: ništa
     textZone.addEventListener("click", (e) => {
       e.stopPropagation();
     });
 
-    // Desni klik — selekcija (alternativa na desktopu)
+    // Desni klik: selekcija
     textZone.addEventListener("contextmenu", (e) => {
       e.preventDefault();
       selectItem(index);
@@ -402,10 +405,6 @@ function showInfo(msg, type) {
 // ============================================================
 function openHelp() {
   document.getElementById("helpOverlay").classList.remove("hidden");
-  // Scroll panel na vrh pri svakom otvaranju
-  const panel = document.querySelector(".help-panel");
-  if (panel) panel.scrollTop = 0;
-  // Scroll overlay na vrh
   document.getElementById("helpOverlay").scrollTop = 0;
 }
 
@@ -422,7 +421,6 @@ document.getElementById("btnDelete").addEventListener("click", deleteSelected);
 document.getElementById("btnHelp").addEventListener("click", openHelp);
 document.getElementById("btnHelpClose").addEventListener("click", closeHelp);
 
-// Klik na tamni overlay (van panela) zatvara help
 document.getElementById("helpOverlay").addEventListener("click", (e) => {
   if (e.target === document.getElementById("helpOverlay")) closeHelp();
 });
@@ -468,7 +466,7 @@ document.getElementById("editItemInput").addEventListener("keydown", (e) => {
   if (e.key === "Escape") { closeEditForm(); clearSelection(); render(); }
 });
 
-// Klik na pozadinu deselektuje stavku
+// Tap/klik na pozadinu deselektuje stavku
 document.addEventListener("click", (e) => {
   if (selectedIndex !== null &&
       !e.target.closest(".item") &&
