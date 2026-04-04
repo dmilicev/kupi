@@ -387,9 +387,8 @@ body {
   min-height: 60px;
   display: flex;
   align-items: center;
-  /* Kriticno: browser ne sme da preuzme dupli tap na ovoj zoni.
-     none = JS dobija SVE touch dogadjaje ukljucujuci dupli tap. */
-  touch-action: none;
+  /* pan-y: scroll radi normalno, a dupli tap detektujemo u JS */
+  touch-action: pan-y;
 }
 
 .text-zone:active { background: rgba(0,0,0,0.03); }
