@@ -17,7 +17,7 @@
       <div class="header-inner">
         <h1 class="logo">🛒 Kupovina</h1>
         <div class="toolbar">
-          <button id="btnNew"    class="btn btn-secondary"><span class="btn-icon">＋</span> New</button>
+          <button id="btnNew"    class="btn btn-secondary"><span class="btn-icon">+</span> New</button>
           <button id="btnEdit"   class="btn btn-edit-top" disabled><span class="btn-icon">✎</span> Edit</button>
           <button id="btnDelete" class="btn btn-delete-top" disabled><span class="btn-icon">✕</span> Delete</button>
           <button id="btnReset"  class="btn btn-danger"><span class="btn-icon">↺</span> Reset</button>
@@ -29,23 +29,21 @@
       </div>
     </header>
 
-    <!-- Forma za dodavanje nove stavke -->
     <div id="addForm" class="inline-form hidden">
       <div class="inline-form-inner">
         <span class="form-label">Nova stavka:</span>
         <input type="text" id="newItemInput" placeholder="Npr: Lidl, mleko" autocomplete="off" />
         <button id="btnConfirmAdd" class="btn btn-primary">Dodaj</button>
-        <button id="btnCancelAdd"  class="btn btn-ghost">Otkaži</button>
+        <button id="btnCancelAdd"  class="btn btn-ghost">Otkazi</button>
       </div>
     </div>
 
-    <!-- Forma za editovanje postojece stavke -->
     <div id="editForm" class="inline-form hidden">
       <div class="inline-form-inner">
         <span class="form-label">Izmena:</span>
         <input type="text" id="editItemInput" autocomplete="off" />
-        <button id="btnConfirmEdit" class="btn btn-primary">Sačuvaj</button>
-        <button id="btnCancelEdit"  class="btn btn-ghost">Otkaži</button>
+        <button id="btnConfirmEdit" class="btn btn-primary">Sacuvaj</button>
+        <button id="btnCancelEdit"  class="btn btn-ghost">Otkazi</button>
       </div>
     </div>
 
@@ -53,36 +51,33 @@
       <ul id="shoppingList" class="shopping-list"></ul>
     </main>
 
-    <!-- Info poruka -->
     <div id="infoMsg" class="info-msg hidden"></div>
 
-    <!-- Help panel -->
     <div id="helpOverlay" class="help-overlay hidden">
       <div class="help-panel">
-        <button id="btnHelpClose" class="help-close" aria-label="Zatvori pomoć">✕</button>
+        <button id="btnHelpClose" class="help-close">X</button>
         <div class="help-content">
+
           <div class="help-header">
-            <div class="help-title-row">
-              <span class="help-app-name">Aplikacija: Kupi</span>
-            </div>
+            <span class="help-app-name">Aplikacija: Kupi</span>
             <div class="help-meta">
-              <span>Autor: Dragan Milićev</span>
-              <span>Email: <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="4f2b222623262c2a390f28222e2623612c2022">[email&#160;protected]</a></span>
+              <span>Autor: Dragan Milicev</span>
+              <span>Email: dmilicev@gmail.com</span>
               <span>Datum: 03.04.2026.</span>
             </div>
           </div>
 
           <p>Aplikacija Kupi je jednostavan podsetnik za kupovinu namenjen brzom i lakom pravljenju spiska namirnica na mobilnom telefonu.</p>
 
-          <p>Aplikacija sadrži podrazumevani spisak stavki. Na vrhu se nalaze aktivne stavke (označene čekboksom) koje je potrebno kupiti, dok se ispod nalaze neaktivne stavke.</p>
+          <p>Aplikacija sadrzi podrazumevani spisak stavki. Na vrhu se nalaze aktivne stavke (oznacene cekboksom) koje je potrebno kupiti, dok se ispod nalaze neaktivne stavke.</p>
 
-          <p>Neaktivne stavke ostaju sačuvane kako bi se kasnije mogle ponovo aktivirati bez potrebe za ponovnim unosom.</p>
+          <p>Neaktivne stavke ostaju sacuvane kako bi se kasnije mogle ponovo aktivirati bez potrebe za ponovnim unosom.</p>
 
-          <div class="help-section-title">Korišćenje</div>
+          <div class="help-section-title">Koriscenje</div>
 
           <div class="help-item">
-            <span class="help-label">Čekboks</span>
-            <span class="help-desc">Klikom na čekboks menja se status stavke (aktivna / neaktivna).</span>
+            <span class="help-label">Cekboks</span>
+            <span class="help-desc">Klikom na cekboks menja se status stavke (aktivna / neaktivna).</span>
           </div>
           <div class="help-item">
             <span class="help-label">New</span>
@@ -90,7 +85,7 @@
           </div>
           <div class="help-item">
             <span class="help-label">Izbor stavke</span>
-            <span class="help-desc">Dugi pritisak prsta (mobilni) ili desni klik miša (računar) na naziv stavke.</span>
+            <span class="help-desc">Na mobilnom: dupli tap (brzo dva puta prstom) na naziv stavke. Na racunaru: desni klik misa ili dugi pritisak levog tastera na naziv stavke.</span>
           </div>
           <div class="help-item">
             <span class="help-label">Edit</span>
@@ -98,7 +93,7 @@
           </div>
           <div class="help-item">
             <span class="help-label">Sortiranje</span>
-            <span class="help-desc">Nakon dodavanja ili izmene stavke, vrši se automatsko sortiranje po abecednom redosledu.</span>
+            <span class="help-desc">Nakon dodavanja ili izmene stavke, vrsi se automatsko sortiranje po abecednom redosledu.</span>
           </div>
           <div class="help-item">
             <span class="help-label">Delete</span>
@@ -110,21 +105,32 @@
           </div>
           <div class="help-item">
             <span class="help-label">Export</span>
-            <span class="help-desc">Čuvanje svih stavki (aktivnih i neaktivnih) u JSON fajl.</span>
+            <span class="help-desc">Cuvanje svih stavki (aktivnih i neaktivnih) u JSON fajl.</span>
           </div>
           <div class="help-item">
             <span class="help-label">Import</span>
-            <span class="help-desc">Učitavanje prethodno sačuvanih stavki iz JSON fajla.</span>
+            <span class="help-desc">Ucitavanje prethodno sacuvanih stavki iz JSON fajla.</span>
           </div>
 
           <div class="help-section-title">Sortiranje po mestu kupovine</div>
 
-          <p>Ovakav način sortiranja omogućava grupisanje stavki prema mestu kupovine. Ako naziv stavke započnete imenom ili početnim slovom mesta kupovine, stavke će biti grupisane zajedno. Kada uđete u određenu prodavnicu, biće grupisane stavke koje tu kupujete.</p>
+          <p>Ovakav nacin sortiranja omogucava grupisanje stavki prema mestu kupovine. Ako naziv stavke zapocnete imenom ili pocetnim slovom mesta kupovine, stavke ce biti grupisane zajedno.</p>
 
           <div class="help-places">
             <div class="help-place-row"><span class="place-tag">p</span><span>pijaca</span></div>
-            <div class="help-place-row"><span class="place-tag">v</span><span>voćara</span></div>
+            <div class="help-place-row"><span class="place-tag">v</span><span>vocara</span></div>
             <div class="help-place-row"><span class="place-tag">s</span><span>samoposluga</span></div>
             <div class="help-place-row"><span class="place-tag">a</span><span>apoteka</span></div>
             <div class="help-place-row"><span class="place-tag">z</span><span>zdrava hrana</span></div>
-            <div class="help-place-row"><span class="place-tag">…</span><span>Lidl, UniomZ, DIS i slično</span></d
+            <div class="help-place-row"><span class="place-tag">...</span><span>Lidl, UniomZ, DIS i slicno</span></div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <script src="kupi.js"></script>
+</body>
+</html>
