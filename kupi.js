@@ -136,42 +136,18 @@ function render() {
 
     // =====================================================
     // MOBILNI: DUPLI TAP za selekciju
-    // Logika:
-    //   touchstart - pamtimo vreme i poziciju prsta
-    //   touchend   - ako se prst nije pomerio (scroll) i
-    //                vreme od prethodnog tapa je kratko -> dupli tap
-    // Scroll nije blokiran jer ne pozivamo preventDefault na scroll.
+    // Koristimo touchstart jer se okida cim prst dotakne ekran.
+    // touch-action: none na .text-zone (CSS) sprecava browser
+    // da preuzme dupli tap pre nego sto JS ga dobije.
     // =====================================================
     let lastTapTime = 0;
-    let tapStartX = 0;
-    let tapStartY = 0;
 
     textZone.addEventListener("touchstart", (e) => {
-      // Pamtimo poziciju i vreme pocetka tapa
-      const t = e.touches[0];
-      tapStartX = t.clientX;
-      tapStartY = t.clientY;
-    }, { passive: true });
-
-    textZone.addEventListener("touchend", (e) => {
       const now = Date.now();
-
-      // Koliko se prst pomerio od touchstart do touchend
-      const t = e.changedTouches[0];
-      const dx = Math.abs(t.clientX - tapStartX);
-      const dy = Math.abs(t.clientY - tapStartY);
-
-      // Ako je prst previse pomeren -> bio je scroll, ne tap
-      if (dx > 10 || dy > 10) {
-        lastTapTime = 0;  // resetuj - scroll prekida niz
-        return;
-      }
-
       const diff = now - lastTapTime;
-
       if (diff > 0 && diff < DOUBLE_TAP_MS) {
         // Dupli tap detektovan
-        e.preventDefault();   // spreci ghost click
+        e.preventDefault();
         e.stopPropagation();
         lastTapTime = 0;
         selectItem(index);
@@ -180,6 +156,10 @@ function render() {
         lastTapTime = now;
       }
     }, { passive: false });
+
+    textZone.addEventListener("touchend", (e) => {
+      // Namerno prazno - sva logika je u touchstart
+    }, { passive: true });
 
     // =====================================================
     // DESKTOP: kratki klik = ništa, dugi klik/desni klik = selekcija
@@ -500,6 +480,13 @@ document.addEventListener("click", (e) => {
 // ============================================================
 // INIT
 // ============================================================
+
+// Email se sastavlja dinamicki da Cloudflare ne bi sakrio adresu
+const helpEmailEl = document.getElementById("helpEmail");
+if (helpEmailEl) {
+  helpEmailEl.textContent = "Email: " + ["dmilicev", "gmail.com"].join("@");
+}
+
 loadItems();
 sortItems();
 saveItems();
